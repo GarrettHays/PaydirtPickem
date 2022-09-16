@@ -53,10 +53,8 @@ export class Picks extends Component {
   }
 
     async getPicksFromAPI() {
-        await fetch('api/picks')
-            .then(function (response) {
-                return response.json();
-            })
+        await fetch('http://localhost:5131/api/picks', { mode: 'no-cors' })
+            .then(response => response.json())
             .then(function (jsonData) {
                 return JSON.stringify(jsonData);
             })
