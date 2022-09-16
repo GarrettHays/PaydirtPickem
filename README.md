@@ -1,0 +1,6 @@
+# Paydirt-Pickem
+
+### Progress Log: 
+- 9/16 - 9am: initial commit - project inception 
+- 9/16 - 10:30am: researching project structure
+- 9/16 - 12:30pm: restarted project, created new remote repository
