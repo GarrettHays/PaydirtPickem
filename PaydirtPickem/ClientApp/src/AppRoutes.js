@@ -14,14 +14,14 @@ const AppRoutes = [
     path: '/league',
     element: <League />
   },
-  {
-    path: '/team',
-    element: <Team />
-  },
-  {
-    path: '/leaderboard',
-    element: <Leaderboard />
-  },
+  //{
+  //  path: '/team',
+  //  element: <Team />
+  //},
+  //{
+  //  path: '/leaderboard',
+  //  element: <Leaderboard />
+  //},
   {
     path: '/picks',
     requireAuth: true,

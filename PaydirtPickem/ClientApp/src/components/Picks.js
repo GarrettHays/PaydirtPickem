@@ -1,36 +1,36 @@
 import React, { Component } from 'react';
-import authService from './api-authorization/AuthorizeService'
+import authService from './api-authorization/AuthorizeService';
 
 export class Picks extends Component {
-  static displayName = Picsk.name;
+  static displayName = Picks.name;
 
   constructor(props) {
     super(props);
-    this.state = { forecasts: [], loading: true };
+    this.state = { pickInfo: [], loading: true };
   }
 
   componentDidMount() {
     this.getPicksFromAPI();
   }
 
-  static renderForecastsTable(forecasts) {
+  static renderPicks(picks) {
     return (
       <table className='table table-striped' aria-labelledby="tabelLabel">
         <thead>
           <tr>
-            <th>Date</th>
-            <th>Temp. (C)</th>
-            <th>Temp. (F)</th>
-            <th>Summary</th>
+            <th>Home Team</th>
+            <th>Home Team Spread</th>
+            <th>Away Team</th>
+            <th>Game Time</th>
           </tr>
         </thead>
         <tbody>
-          {forecasts.map(forecast =>
-            <tr key={forecast.date}>
-              <td>{forecast.date}</td>
-              <td>{forecast.temperatureC}</td>
-              <td>{forecast.temperatureF}</td>
-              <td>{forecast.summary}</td>
+          {picks.map(pick =>
+            <tr key={pick.homeTeam}>
+              <td>{pick.homeTeam}</td>
+              <td>{pick.homeTeamSpread}</td>
+              <td>{pick.awayTeam}</td>
+              <td>{pick.gameTime}</td>
             </tr>
           )}
         </tbody>
@@ -41,7 +41,7 @@ export class Picks extends Component {
   render() {
     let contents = this.state.loading
       ? <p><em>Loading...</em></p>
-      : FetchData.renderForecastsTable(this.state.forecasts);
+      : Picks.renderPicks(this.state.picks);
 
     return (
       <div>
@@ -53,11 +53,24 @@ export class Picks extends Component {
   }
 
     async getPicksFromAPI() {
-    const token = await authService.getAccessToken();
-    const response = await fetch('weatherforecast', {
-      headers: !token ? {} : { 'Authorization': `Bearer ${token}` }
-    });
-    const data = await response.json();
-    this.setState({ forecasts: data, loading: false });
-  }
+        await fetch('api/picks')
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (jsonData) {
+                return JSON.stringify(jsonData);
+            })
+            .then(jsonStr => {
+                this.setState({ pickInfo: jsonStr, loading: false });
+                console.log(jsonStr);
+            })
+            .catch(error => console.error('Unable to get items.', error));
+    }
+    //    const token = await authService.getAccessToken();
+    //    const response = await fetch('picks', {
+    //      headers: !token ? {} : { 'Authorization': `Bearer ${token}` }
+    //    });
+    //const data = await response.json();
+    //this.setState({ picks: data, loading: false });
+/*  }*/
 }

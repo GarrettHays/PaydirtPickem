@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-
+using PaydirtPickem.Logic;
+using PaydirtPickem.Models;
 
 namespace PaydirtPickem.Controllers
 {
@@ -7,18 +8,23 @@ namespace PaydirtPickem.Controllers
     [ApiController]
     public class PicksController : ControllerBase
     {
-        // GET: api/<ValuesController>
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
+        //[HttpGet]
+        //public async Task<List<PickDTO>>GetAsync()
+        //{
+        //    var picksLogic = new PicksLogic();
+        //    var picks = await picksLogic.GetPicks();
+        //    return picks;
+        //}
 
-        // GET api/<ValuesController>/5
-        [HttpGet("{id}")]
-        public string GetPicks(int id)
+        [HttpGet]
+        public IEnumerable<WeatherForecast> Get()
         {
-            return "value";
+            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            {
+                Date = DateTime.Now.AddDays(index),
+                TemperatureC = Random.Shared.Next(-20, 55)
+            })
+            .ToArray();
         }
     }
 }
