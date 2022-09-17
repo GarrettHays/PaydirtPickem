@@ -1,5 +1,8 @@
 # Paydirt-Pickem
 
+### Project Description:
+This web application will provide users a platform to create a football pickem league with all of the expected functionality included. This functionality includes: authentication, league creation, individual team creation, pick selection utilizing betting APIs, saving/locking in picks, scoring based on outcomes of games, leaderboards.
+
 ### Progress Log: 
 - 9/16 - 9am: initial commit - project inception 
 - 9/16 - 10:30am: researching project structure
