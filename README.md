@@ -7,3 +7,4 @@
 - 9/16 - 1:45pm: WIP - adding picks controller and logic
 - 9/16 - 3:30pm: WIP - trying to get API calls to work
 - 9/16 - 4:30pm: WIP - still working on the API
+- 9/16 - 5:07pm: WIP - given up for the day
