@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PaydirtPickem.Logic;
 using PaydirtPickem.Models;
 
@@ -9,6 +10,7 @@ namespace PaydirtPickem.Controllers
     public class PicksController : ControllerBase
     {
         [HttpGet]
+        [AllowAnonymous]
         public async Task<List<PickDTO>> Get()
         {
             var picksLogic = new PicksLogic();

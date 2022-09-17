@@ -45,7 +45,7 @@ export class Picks extends Component {
 
     return (
       <div>
-        <h1 id="tabelLabel" >Make Your Picks</h1>
+        <h1 id="tabelLabel">Make Your Picks</h1>
         <p>Select your picks from the games below:</p>
         {contents}
       </div>
@@ -53,7 +53,10 @@ export class Picks extends Component {
   }
 
     async getPicksFromAPI() {
-        await fetch('http://localhost:5131/api/picks', { mode: 'no-cors' })
+        const token = await authService.getAccessToken();
+        await fetch('http://localhost/api/picks', {
+            headers: !token ? {} : { 'Authorization': `Bearer ${token}` }
+            })
             .then(response => response.json())
             .then(function (jsonData) {
                 return JSON.stringify(jsonData);
