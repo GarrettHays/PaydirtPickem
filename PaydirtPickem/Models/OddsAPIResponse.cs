@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 
 namespace PaydirtPickem.Models
-{ 
+{
     public class Bookmaker
     {
         [JsonProperty("key")]
@@ -26,19 +26,7 @@ namespace PaydirtPickem.Models
         public List<Outcome> Outcomes { get; set; }
     }
 
-    public class Outcome
-    {
-        [JsonProperty("name")]
-        public string Name { get; set; }
-
-        [JsonProperty("price")]
-        public int Price { get; set; }
-
-        [JsonProperty("point")]
-        public double Point { get; set; }
-    }
-
-    public class OddsAPIResponse
+    public class Odd
     {
         [JsonProperty("id")]
         public string Id { get; set; }
@@ -62,5 +50,18 @@ namespace PaydirtPickem.Models
         public List<Bookmaker> Bookmakers { get; set; }
     }
 
+    public class Outcome
+    {
+        [JsonProperty("name")]
+        public string Name { get; set; }
 
+        [JsonProperty("price")]
+        public double Price { get; set; }
+
+        [JsonProperty("point")]
+        public double Point { get; set; }
+    }
+
+    
 }
+

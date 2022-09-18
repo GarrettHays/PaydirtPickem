@@ -13,7 +13,7 @@ export class Picks extends Component {
     this.getPicksFromAPI();
   }
 
-  static renderPicks(picks) {
+  static renderPicks(pickInfo) {
     return (
       <table className='table table-striped' aria-labelledby="tabelLabel">
         <thead>
@@ -25,7 +25,7 @@ export class Picks extends Component {
           </tr>
         </thead>
         <tbody>
-          {picks.map(pick =>
+          {pickInfo.map(pick =>
             <tr key={pick.homeTeam}>
               <td>{pick.homeTeam}</td>
               <td>{pick.homeTeamSpread}</td>
@@ -41,7 +41,7 @@ export class Picks extends Component {
   render() {
     let contents = this.state.loading
       ? <p><em>Loading...</em></p>
-      : Picks.renderPicks(this.state.picks);
+      : Picks.renderPicks(this.state.pickInfo);
 
     return (
       <div>
@@ -54,9 +54,7 @@ export class Picks extends Component {
 
     async getPicksFromAPI() {
         const token = await authService.getAccessToken();
-        await fetch('http://localhost/api/picks', {
-            headers: !token ? {} : { 'Authorization': `Bearer ${token}` }
-            })
+        await fetch('api/picks')
             .then(response => response.json())
             .then(function (jsonData) {
                 return JSON.stringify(jsonData);
