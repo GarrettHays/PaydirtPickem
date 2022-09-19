@@ -13,7 +13,7 @@ export class Picks extends Component {
     this.getPicksFromAPI();
   }
 
-  static renderPicks(pickInfo) {
+    static renderPicks(pickInfo) {
     return (
       <table className='table table-striped' aria-labelledby="tabelLabel">
         <thead>
@@ -56,20 +56,9 @@ export class Picks extends Component {
         const token = await authService.getAccessToken();
         await fetch('api/picks')
             .then(response => response.json())
-            .then(function (jsonData) {
-                return JSON.stringify(jsonData);
-            })
             .then(jsonStr => {
                 this.setState({ pickInfo: jsonStr, loading: false });
-                console.log(jsonStr);
             })
             .catch(error => console.error('Unable to get items.', error));
     }
-    //    const token = await authService.getAccessToken();
-    //    const response = await fetch('picks', {
-    //      headers: !token ? {} : { 'Authorization': `Bearer ${token}` }
-    //    });
-    //const data = await response.json();
-    //this.setState({ picks: data, loading: false });
-/*  }*/
 }
