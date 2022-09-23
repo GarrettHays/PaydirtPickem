@@ -11,13 +11,16 @@ This web application will provide users a platform to create a football pickem l
 - 9/16 - 3:30pm: WIP - trying to get API calls to work
 - 9/16 - 4:30pm: WIP - still working on the API
 - 9/16 - 5:07pm: WIP - given up for the day
+
 - 9/18 - 3:00pm: WIP - regained will to live and tackle the API
 - 9/18 - 4:55pm: conquered the API, much response
 - 9/18 - 5:10pm: get data showing in table on client side
+
 - 9/23 - 8am-9am: WIP - form creation for league creation
 - 9/23 - 9am-10am: WIP - League creation and team creation forms complete
 - 9/23 - 10am-12pm: WIP - Database model creation, Db context updates, radio buttons
 - 9/23 - 12pm: Create initial database migration
 - 9/23 - 1:48pm WIP troubleshooting database
 - 9/23 - 3:20pm WIP passing data from frontend to backend
+- 9/23 - 4:23pm WIP still working on form submission of data
 
