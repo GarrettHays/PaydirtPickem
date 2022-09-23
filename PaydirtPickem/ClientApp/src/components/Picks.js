@@ -4,19 +4,36 @@ import authService from './api-authorization/AuthorizeService';
 export class Picks extends Component {
   static displayName = Picks.name;
 
-  constructor(props) {
-    super(props);
-    this.state = { pickInfo: [], loading: true };
-  }
+    constructor(props) {
+        super(props);
+        this.state = { pickInfo: [], value: 'test', loading: true };
+    }
+    //  this.handleChange = this.handleChange.bind(this);
+    //  this.handleSubmit = this.handleSubmit.bind(this);
+    //}
+
+    //handleChange(event) {
+    //    console.log('a pick was clicked' + event.target.value);
+    //    this.setState({ value: event.target.value });
+    //}
+
+    //handleSubmit(event) {
+    //    console.log('A pick was submitted: ' + this.state.value);
+    //    event.preventDefault();
+/*    }*/
 
   componentDidMount() {
     this.getPicksFromAPI();
   }
 
+    //static  makePick() {
+    //    console.log('pick made');
+    //}
+
     static renderPicks(pickInfo) {
 
         return (
-        <form>
+        <form >
           <table className='table table-striped' aria-labelledby="tabelLabel">
             <thead>
               <tr>
@@ -30,17 +47,20 @@ export class Picks extends Component {
             </thead>
             <tbody>
               {pickInfo.map(pick =>
-                <tr key={pick.homeTeam}>
-                  <td><input type='radio' id='{pick.homeTeam}' name='{pick.homeTeam}{pick.awayTeam}' value='{pick.homeTeam}' /></td>
+                  <tr key={pick.homeTeam}>
+                      <td><input type='radio' id='{pick.homeTeam}' name='{pick.homeTeam}{pick.awayTeam}' value='1'/></td>
+                      {/*<td><input type='radio' id='{pick.homeTeam}' name='{pick.homeTeam}{pick.awayTeam}' value={this.state.value} onChange={this.handleChange} /></td>*/}
+                    {/*<td><input type='radio' id='{pick.homeTeam}' name='{pick.homeTeam}{pick.awayTeam}' value='{pick.homeTeam}' /></td>*/}
                   <td>{pick.homeTeam}</td>
                   <td>{pick.homeTeamSpread}</td>
-                  <td><input type='radio' id='{pick.awayTeam}' name='{pick.homeTeam}{pick.awayTeam}' value='{pick.awayTeam}' /></td>
+                  <td><input type='radio' id='{pick.awayTeam}' name='{pick.homeTeam}{pick.awayTeam}1' value='{pick.awayTeam}' /></td>
                   <td>{pick.awayTeam}</td>
                   <td>{(new Date(pick.gameTime)).toLocaleString('en-US')}</td>
                 </tr>
               )}
             </tbody>
-           </table>
+            </table>
+                <button onClick="makePick()">Make Picks</button>
         </form>
     );
   }
