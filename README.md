@@ -19,3 +19,5 @@ This web application will provide users a platform to create a football pickem l
 - 9/23 - 10am-12pm: WIP - Database model creation, Db context updates, radio buttons
 - 9/23 - 12pm: Create initial database migration
 - 9/23 - 1:48pm WIP troubleshooting database
+- 9/23 - 3:20pm WIP passing data from frontend to backend
+
