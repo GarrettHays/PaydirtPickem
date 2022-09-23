@@ -14,27 +14,34 @@ export class Picks extends Component {
   }
 
     static renderPicks(pickInfo) {
-    return (
-      <table className='table table-striped' aria-labelledby="tabelLabel">
-        <thead>
-          <tr>
-            <th>Home Team</th>
-            <th>Home Team Spread</th>
-            <th>Away Team</th>
-            <th>Game Time</th>
-          </tr>
-        </thead>
-        <tbody>
-          {pickInfo.map(pick =>
-            <tr key={pick.homeTeam}>
-              <td>{pick.homeTeam}</td>
-              <td>{pick.homeTeamSpread}</td>
-              <td>{pick.awayTeam}</td>
-              <td>{pick.gameTime}</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+
+        return (
+        <form>
+          <table className='table table-striped' aria-labelledby="tabelLabel">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Home Team</th>
+                <th>Home Team Spread</th>
+                <th></th>
+                <th>Away Team</th>
+                <th>Game Time (User Local Time)</th>
+              </tr>
+            </thead>
+            <tbody>
+              {pickInfo.map(pick =>
+                <tr key={pick.homeTeam}>
+                  <td><input type='radio' id='{pick.homeTeam}' name='{pick.homeTeam}{pick.awayTeam}' value='{pick.homeTeam}' /></td>
+                  <td>{pick.homeTeam}</td>
+                  <td>{pick.homeTeamSpread}</td>
+                  <td><input type='radio' id='{pick.awayTeam}' name='{pick.homeTeam}{pick.awayTeam}' value='{pick.awayTeam}' /></td>
+                  <td>{pick.awayTeam}</td>
+                  <td>{(new Date(pick.gameTime)).toLocaleString('en-US')}</td>
+                </tr>
+              )}
+            </tbody>
+           </table>
+        </form>
     );
   }
 
