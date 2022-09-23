@@ -16,3 +16,4 @@ This web application will provide users a platform to create a football pickem l
 - 9/18 - 5:10pm: get data showing in table on client side
 - 9/23 - 8am-9am: WIP - form creation for league creation
 - 9/23 - 9am-10am: WIP - League creation and team creation forms complete
+- 9/23 - 10am-12pm: WIP - Database model creation, Db context updates, radio buttons
