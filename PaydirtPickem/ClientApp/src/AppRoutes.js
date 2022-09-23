@@ -14,10 +14,10 @@ const AppRoutes = [
     path: '/league',
     element: <League />
   },
-  //{
-  //  path: '/team',
-  //  element: <Team />
-  //},
+  {
+    path: '/team',
+    element: <Team />
+  },
   //{
   //  path: '/leaderboard',
   //  element: <Leaderboard />
