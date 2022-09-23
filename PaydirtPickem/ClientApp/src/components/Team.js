@@ -1,31 +1,27 @@
 import React, { Component } from 'react';
 
-export class Counter extends Component {
-  static displayName = Counter.name;
+export class Team extends Component {
+    static displayName = Team.name;
 
-  constructor(props) {
-    super(props);
-    this.state = { currentCount: 0 };
-    this.incrementCounter = this.incrementCounter.bind(this);
-  }
-
-  incrementCounter() {
-    this.setState({
-      currentCount: this.state.currentCount + 1
-    });
-  }
-
-  render() {
-    return (
-      <div>
-        <h1>Counter</h1>
-
-        <p>This is a simple example of a React component.</p>
-
-        <p aria-live="polite">Current count: <strong>{this.state.currentCount}</strong></p>
-
-        <button className="btn btn-primary" onClick={this.incrementCounter}>Increment</button>
-      </div>
-    );
-  }
+    render() {
+        return (
+            <div>
+                <form>
+                    <input
+                        type='text'
+                        name='name'
+                        placeholder='Name' /> <br />
+                    <input
+                        type='text'
+                        name='team'
+                        placeholder='Team Name' /> <br />
+                    <input
+                        type='text'
+                        name='league'
+                        placeholder='Select League to Join' /> <br />
+                    <button type='submit'>submit</button>
+                </form>
+            </div>
+        );
+    }
 }
