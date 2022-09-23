@@ -14,3 +14,4 @@ This web application will provide users a platform to create a football pickem l
 - 9/18 - 3:00pm: WIP - regained will to live and tackle the API
 - 9/18 - 4:55pm: conquered the API, much response
 - 9/18 - 5:10pm: get data showing in table on client side
+- 9/23 - 8am-9am: WIP - form creation for league creation
