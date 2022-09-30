@@ -27,3 +27,5 @@ This web application will provide users a platform to create a football pickem l
 - 9/30 - 8am - WIP - form submission
 - 9/30 - 9:40am - pivoting to work on presentation materials
 - 9/30 - 10:50am - WIP further refining form submission (getting close?)
+- 9/30 - 12:30pm - WIP researching how to collect and send data from mapped inputs
+- 9:30 - 1:10pm - breaking for lunch
