@@ -30,3 +30,4 @@ This web application will provide users a platform to create a football pickem l
 - 9/30 - 12:30pm - WIP researching how to collect and send data from mapped inputs
 - 9/30 - 1:10pm - breaking for lunch
 - 9/30 - 3:20pm - I think the forms are working - moving onto the API and database to confirm 
+- 9/30 - 4:10pm - add new api to post user pick data
