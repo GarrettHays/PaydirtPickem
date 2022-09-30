@@ -25,3 +25,4 @@ This web application will provide users a platform to create a football pickem l
 - 9/23 - 4:23pm WIP still working on form submission of data
 
 - 9/30 - 8am - WIP - form submission
+- 9/30 - 9:40am - pivoting to work on presentation materials
