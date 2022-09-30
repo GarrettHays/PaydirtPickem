@@ -16,7 +16,6 @@ export class Picks extends Component {
             }
         };
         this.handleSubmit = (event) => {
-            event.preventDefault();
         };
     }
 
@@ -39,7 +38,6 @@ export class Picks extends Component {
 
     handleSubmit(event) {
         console.log("we are in the submit!");
-        event.preventDefault();
 
         const data = this.state.form;
 
@@ -58,13 +56,9 @@ export class Picks extends Component {
             .then(response => console.log('Success:', response));
     }
 
-    //static  makePick() {
-    //    console.log('pick made');
-    //}
-
     static renderPicks(pickInfo) {
         return (
-        <form>
+            <form onSubmit={this.handleSubmit}>
           <table className='table table-striped' aria-labelledby="tabelLabel">
             <thead>
               <tr>
@@ -77,7 +71,25 @@ export class Picks extends Component {
               </tr>
             </thead>
             <tbody>
-              {pickInfo.map(pick =>
+                <tr key='Buffaloo Bills'>
+                      <td><input type='radio' id='Buffaloo Bills' name='Buffaloo Bills' value='Buffaloo Bills' onChange={this.handleChange} /></td>
+                  <td>'Buffaloo Bills'</td>
+                  <td>5</td>
+                      <td><input type='radio' id='Buffaloo Shills' name='Buffaloo Bills' value='Buffaloo Shills' onChange={this.handleChange} /></td>
+                  <td>'Buffaloo Shills'</td>
+                  <td>{(new Date()).toLocaleString('en-US')}</td>
+                </tr>
+
+                <tr key='KC Chefs'>
+                      <td><input type='radio' id='KC Chefs' name='KC Chefs' value='KC Chefs' onChange={this.handleChange} /></td>
+                  <td>'KC Chefs'</td>
+                  <td>5</td>
+                      <td><input type='radio' id='KC Chefs' name='KC Chefs' value='KC Chefs' onChange={this.handleChange} /></td>
+                  <td>'KC Chefs''</td>
+                  <td>{(new Date()).toLocaleString('en-US')}</td>
+                </tr>
+              
+              {/* {pickInfo.map(pick =>
                   <tr key={pick.homeTeam}>
                       <td><input type='radio' id={pick.homeTeam} name={pick.homeTeam} value={pick.homeTeam} onChange={this.handleChange} /></td>
                   <td>{pick.homeTeam}</td>
@@ -86,10 +98,10 @@ export class Picks extends Component {
                   <td>{pick.awayTeam}</td>
                   <td>{(new Date(pick.gameTime)).toLocaleString('en-US')}</td>
                 </tr>
-              )}
+              )} */}
             </tbody>
             </table>
-                <button onSubmit={this.handleSubmit}>Make Picks</button>
+                <button type="submit">Make Picks</button>
         </form>
     );
   }
