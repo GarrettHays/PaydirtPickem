@@ -1,39 +1,70 @@
 import React, { Component } from 'react';
 import authService from './api-authorization/AuthorizeService';
+import $ from "jquery";
 
 export class Picks extends Component {
   static displayName = Picks.name;
 
     constructor(props) {
         super(props);
-        this.state = { pickInfo: [], value: 'test', loading: true };
+        this.state = {
+            pickInfo: [],
+            loading: true,
+            form: {
+                name: '',
+                value: ''
+            }
+        };
+        this.handleSubmit = (event) => {
+            event.preventDefault();
+        };
     }
-    //  this.handleChange = this.handleChange.bind(this);
-    //  this.handleSubmit = this.handleSubmit.bind(this);
-    //}
-
-    //handleChange(event) {
-    //    console.log('a pick was clicked' + event.target.value);
-    //    this.setState({ value: event.target.value });
-    //}
-
-    //handleSubmit(event) {
-    //    console.log('A pick was submitted: ' + this.state.value);
-    //    event.preventDefault();
-/*    }*/
 
   componentDidMount() {
     this.getPicksFromAPI();
-  }
+    }
+
+    handleChange = (e) => {
+        console.log('handling change!!');
+        $('input[name="' + $(this).attr('name') + '"]').not($(this)).trigger('deselect');
+        console.log("changing value!!");
+        const { form } = this.state;
+        this.setState({
+            form: {
+                ...form,
+                [e.target.name]: e.target.value
+            }
+        });
+    }
+
+    handleSubmit(event) {
+        console.log("we are in the submit!");
+        event.preventDefault();
+
+        const data = this.state.form;
+
+        fetch('/api/createAccount', {
+            method: 'POST',
+
+            body: JSON.stringify(data), // data can be `string` or {object}!
+
+            headers: { 'Content-Type': 'application/json' }
+        })
+
+            .then(res => res.json())
+
+            .catch(error => console.error('Error:', error))
+
+            .then(response => console.log('Success:', response));
+    }
 
     //static  makePick() {
     //    console.log('pick made');
     //}
 
     static renderPicks(pickInfo) {
-
         return (
-        <form >
+        <form>
           <table className='table table-striped' aria-labelledby="tabelLabel">
             <thead>
               <tr>
@@ -48,19 +79,17 @@ export class Picks extends Component {
             <tbody>
               {pickInfo.map(pick =>
                   <tr key={pick.homeTeam}>
-                      <td><input type='radio' id='{pick.homeTeam}' name='{pick.homeTeam}{pick.awayTeam}' value='1'/></td>
-                      {/*<td><input type='radio' id='{pick.homeTeam}' name='{pick.homeTeam}{pick.awayTeam}' value={this.state.value} onChange={this.handleChange} /></td>*/}
-                    {/*<td><input type='radio' id='{pick.homeTeam}' name='{pick.homeTeam}{pick.awayTeam}' value='{pick.homeTeam}' /></td>*/}
+                      <td><input type='radio' id={pick.homeTeam} name={pick.homeTeam} value={pick.homeTeam} onChange={this.handleChange} /></td>
                   <td>{pick.homeTeam}</td>
                   <td>{pick.homeTeamSpread}</td>
-                  <td><input type='radio' id='{pick.awayTeam}' name='{pick.homeTeam}{pick.awayTeam}1' value='{pick.awayTeam}' /></td>
+                      <td><input type='radio' id={pick.awayTeam} name={pick.homeTeam} value={pick.awayTeam} onChange={this.handleChange} /></td>
                   <td>{pick.awayTeam}</td>
                   <td>{(new Date(pick.gameTime)).toLocaleString('en-US')}</td>
                 </tr>
               )}
             </tbody>
             </table>
-                <button onClick="makePick()">Make Picks</button>
+                <button onSubmit={this.handleSubmit}>Make Picks</button>
         </form>
     );
   }

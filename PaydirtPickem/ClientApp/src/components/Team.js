@@ -53,7 +53,7 @@ export class Team extends Component {
                 <input id="name" name="name" type="text" onChange={this.handleChange} />
                 <br />
                 <label htmlFor="league">Select League to Join: </label>
-                <select class="league" id="league" name="league" type="league" onChange={this.handleChange}>
+                <select className="league" id="league" name="league" type="league" onChange={this.handleChange}>
                     <option value="selected" selected="selected">Available Leagues</option>
                     <option value="option1" value="option3">League 1</option>
                     <option value="option2" value="option4">League 2</option>
