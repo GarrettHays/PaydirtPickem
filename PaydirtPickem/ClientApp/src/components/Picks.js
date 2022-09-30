@@ -43,7 +43,7 @@ export class Picks extends Component {
 
         const data = this.state.form;
 
-        fetch('/api/createAccount', {
+        fetch('/api/picks', {
             method: 'POST',
 
             body: JSON.stringify(data), // data can be `string` or {object}!

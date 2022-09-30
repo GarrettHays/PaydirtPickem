@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using PaydirtPickem.Data;
 using PaydirtPickem.Logic;
 using PaydirtPickem.Models;
 using System.Security.Claims;
@@ -12,10 +13,12 @@ namespace PaydirtPickem.Controllers
     public class PicksController : ControllerBase
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        
-        public PicksController(UserManager<ApplicationUser> userManager)
+        private readonly PaydirtPickemDbContext _db;
+
+        public PicksController(UserManager<ApplicationUser> userManager, PaydirtPickemDbContext db)
         {
             _userManager = userManager;
+            _db = db;
         }
 
         [HttpGet]
@@ -29,13 +32,18 @@ namespace PaydirtPickem.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public async Task Post([FromBody]List<UserPick> userPicks)
+        public async Task Post([FromBody]List<UserPickDTO> userPicks)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var currentUser = await _userManager.FindByIdAsync(userId);
             foreach (var pick in userPicks)
             {
-                pick.UserId = Guid.Parse(userId);
-                pick.Id = Guid.NewGuid();
+                var userPick = new UserPick();
+                userPick.GameId = pick.GameId;
+                userPick.PickedTeam = pick.PickedTeam;
+                userPick.UserId = Guid.Parse(currentUser.Id);
+                _db.UserPicks.Add(userPick);
+                _db.SaveChanges();
             }
         }
     }
