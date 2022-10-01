@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PaydirtPickem.Data;
 
@@ -11,9 +12,10 @@ using PaydirtPickem.Data;
 namespace PaydirtPickem.Migrations
 {
     [DbContext(typeof(PaydirtPickemDbContext))]
-    partial class PaydirtPickemDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221001195329_ChangeGamePropsToStrings")]
+    partial class ChangeGamePropsToStrings
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -384,9 +386,6 @@ namespace PaydirtPickem.Migrations
 
                     b.Property<double?>("HomeTeamSpread")
                         .HasColumnType("float");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
 
                     b.Property<int?>("WeekNumber")
                         .HasColumnType("int");
