@@ -24,11 +24,10 @@ namespace PaydirtPickem.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<List<PickDTO>> Get()
+        public async Task<List<Game>> Get()
         {
-            var picksLogic = new PicksLogic();
-            var picks = await picksLogic.GetPicks();
-            return picks;
+            var games = _db.Games.Where(x => x.IsActive).ToList();
+            return games;
         }
 
         [HttpPost]

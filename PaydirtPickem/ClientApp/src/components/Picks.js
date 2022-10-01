@@ -1,22 +1,37 @@
 import React, { Component } from 'react';
 import authService from './api-authorization/AuthorizeService';
+import $ from "jquery";
 
 export class Picks extends Component {
   constructor(props) {
     super(props);
     this.state = {
         pickInfo: [],
-        loading: true,
-        form: {
+        form: [{
             name: '',
             value: ''
-        }
+        }]
     };
+    }
+
+    componentDidMount() {
+        this.getPicksFromAPI();
+    }
+
+  handleChange = (e) => {
+    $('input[name="' + $(this).attr('name') + '"]').not($(this)).trigger('deselect');
+    const { form } = this.state;
+    this.setState({
+      form: {
+          ...form,
+          [e.target.name]: e.target.value
+      }
+    });
+    console.log('this is changed', this);
   }
 
   handleClick = async event => {
     event.preventDefault();
-    console.log('this is:', this);
     const token = await authService.getAccessToken();
     const data = [{ gameId: "7f2ff573-e878-4892-bcab-86aa3c81f7c9", pickedTeam: "Boofaloo Bills" }];
 
@@ -36,7 +51,8 @@ export class Picks extends Component {
             .then(response => console.log('Success:', response));
     }
   render() {
-    return (
+      let pickInfo = this.state.pickInfo;
+      return (
       <div>
         <h1 id="tabelLabel">Make Your Picks</h1>
         <p>Select your picks from the games below:</p>
@@ -53,25 +69,7 @@ export class Picks extends Component {
               </tr>
             </thead>
             <tbody>
-                <tr key='Buffaloo Bills'>
-                      <td><input type='radio' id='Buffaloo Bills' name='Buffaloo Bills' value='Buffaloo Bills' onChange={this.handleChange} /></td>
-                  <td>'Buffaloo Bills'</td>
-                  <td>5</td>
-                      <td><input type='radio' id='Buffaloo Shills' name='Buffaloo Bills' value='Buffaloo Shills' onChange={this.handleChange} /></td>
-                  <td>'Buffaloo Shills'</td>
-                  <td>{(new Date()).toLocaleString('en-US')}</td>
-                </tr>
-
-                <tr key='KC Chefs'>
-                      <td><input type='radio' id='KC Chefs' name='KC Chefs' value='KC Chefs' onChange={this.handleChange} /></td>
-                  <td>'KC Chefs'</td>
-                  <td>5</td>
-                      <td><input type='radio' id='KC Chefs' name='KC Chefs' value='KC Chefs' onChange={this.handleChange} /></td>
-                  <td>'KC Chefs''</td>
-                  <td>{(new Date()).toLocaleString('en-US')}</td>
-                </tr>
-              
-              {/* {pickInfo.map(pick =>
+               {pickInfo.map(pick =>
                   <tr key={pick.homeTeam}>
                       <td><input type='radio' id={pick.homeTeam} name={pick.homeTeam} value={pick.homeTeam} onChange={this.handleChange} /></td>
                   <td>{pick.homeTeam}</td>
@@ -80,12 +78,21 @@ export class Picks extends Component {
                   <td>{pick.awayTeam}</td>
                   <td>{(new Date(pick.gameTime)).toLocaleString('en-US')}</td>
                 </tr>
-              )} */}
+              )} 
             </tbody>
             </table>
             <button onClick={this.handleClick}> Click me </button>
         </form>
       </div>
     );
-  }
+    }
+
+    async getPicksFromAPI() {
+        await fetch('api/picks')
+            .then(response => response.json())
+            .then(jsonStr => {
+                this.setState({ pickInfo: jsonStr });
+            })
+            .catch(error => console.error('Unable to get items.', error));
+    }
 }
