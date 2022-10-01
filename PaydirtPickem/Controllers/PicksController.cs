@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Net.Http.Headers;
 using PaydirtPickem.Data;
 using PaydirtPickem.Logic;
 using PaydirtPickem.Models;
@@ -36,6 +37,9 @@ namespace PaydirtPickem.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var currentUser = await _userManager.FindByIdAsync(userId);
+
+            var accessToken = Request.Headers[HeaderNames.Authorization];
+
             foreach (var pick in userPicks)
             {
                 var userPick = new UserPick();
