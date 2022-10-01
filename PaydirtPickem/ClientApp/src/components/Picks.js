@@ -7,10 +7,7 @@ export class Picks extends Component {
     super(props);
     this.state = {
         pickInfo: [],
-        form: [{
-            name: '',
-            value: ''
-        }]
+        form: []
     };
     }
 
@@ -33,8 +30,7 @@ export class Picks extends Component {
   handleClick = async event => {
     event.preventDefault();
     const token = await authService.getAccessToken();
-    const data = [{ gameId: "7f2ff573-e878-4892-bcab-86aa3c81f7c9", pickedTeam: "Boofaloo Bills" }];
-
+     const data = this.state.form;
         fetch('/api/picks', {
             method: 'POST',
 
@@ -43,11 +39,7 @@ export class Picks extends Component {
             headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`  }
 
         })
-
-            // .then(res => res.json())
-
             .catch(error => console.error('Error:', error))
-
             .then(response => console.log('Success:', response));
     }
   render() {
@@ -71,10 +63,10 @@ export class Picks extends Component {
             <tbody>
                {pickInfo.map(pick =>
                   <tr key={pick.homeTeam}>
-                      <td><input type='radio' id={pick.homeTeam} name={pick.homeTeam} value={pick.homeTeam} onChange={this.handleChange} /></td>
+                      <td><input type='radio' id={pick.homeTeam} name={pick.id} value={pick.homeTeam} onChange={this.handleChange} /></td>
                   <td>{pick.homeTeam}</td>
                   <td>{pick.homeTeamSpread}</td>
-                      <td><input type='radio' id={pick.awayTeam} name={pick.homeTeam} value={pick.awayTeam} onChange={this.handleChange} /></td>
+                       <td><input type='radio' id={pick.awayTeam} name={pick.id} value={pick.awayTeam} onChange={this.handleChange} /></td>
                   <td>{pick.awayTeam}</td>
                   <td>{(new Date(pick.gameTime)).toLocaleString('en-US')}</td>
                 </tr>
