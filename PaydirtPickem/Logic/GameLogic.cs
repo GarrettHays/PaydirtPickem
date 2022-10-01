@@ -34,6 +34,7 @@ namespace PaydirtPickem.Logic
             {
                 var game = new Game
                 {
+                    Id = Guid.Parse(odd.Id),
                     HomeTeam = odd.HomeTeam,
                     AwayTeam = odd.AwayTeam,
                     HomeTeamSpread = odd.Bookmakers.FirstOrDefault()?.Markets.FirstOrDefault()?.Outcomes.FirstOrDefault(x => x.Name == odd.HomeTeam)?.Point,
