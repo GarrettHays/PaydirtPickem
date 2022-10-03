@@ -1,0 +1,20 @@
+﻿.teamIMG {
+    margin-top: 40px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 25px;
+    display: block;
+    width: 20%;
+    height: auto;
+
+}
+
+.teamButton {
+    width: 150px;
+    height: 60px;
+    margin-top: 40px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 60px;
+    display: block;
+}
