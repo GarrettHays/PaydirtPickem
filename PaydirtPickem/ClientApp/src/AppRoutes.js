@@ -5,6 +5,7 @@ import { Leaderboard } from "./components/Leaderboard";
 import { League } from "./components/League";
 import { Picks } from "./components/Picks";
 import { Team } from "./components/Team";
+import { Landing } from "./components/Landing";
 
 const AppRoutes = [
   {
