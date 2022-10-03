@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import './League.css';
 
 export class League extends Component {
 
@@ -44,6 +45,8 @@ export class League extends Component {
 
     render() {
         return (
+          <div>  
+            <img className="leagueIMG" src="https://raw.githubusercontent.com/GarrettHays/images/main/LEAGUE.png" alt="logo"></img>
             <form onSubmit={this.handleSubmit}>
                 <label htmlFor="name">Enter Name: </label>
                 <input id="name" name="name" type="text" onChange={this.handleChange} />
@@ -53,6 +56,7 @@ export class League extends Component {
                 <br/>
                 <button>Create League!</button>
             </form>
+          </div>
         );
     }
 }
