@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import './Picks.css';
 import authService from './api-authorization/AuthorizeService';
 import $ from "jquery";
 
@@ -46,7 +47,7 @@ export class Picks extends Component {
       let pickInfo = this.state.pickInfo;
       return (
       <div>
-        <h1 id="tabelLabel">Make Your Picks</h1>
+        <img id="tabelLabel" className="picksIMG" src="https://raw.githubusercontent.com/GarrettHays/images/main/Picks.png" alt="logo"></img>
         <p>Select your picks from the games below:</p>
         <form>
           <table className='table table-striped' aria-labelledby="tabelLabel">
@@ -73,7 +74,7 @@ export class Picks extends Component {
               )} 
             </tbody>
             </table>
-            <button onClick={this.handleClick}> Click me </button>
+            <button className='picksButton'onClick={this.handleClick}> Submit Picks </button>
         </form>
       </div>
     );
