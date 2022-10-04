@@ -3,6 +3,8 @@ using PaydirtPickem.Data;
 using PaydirtPickem.Models;
 using PaydirtPickem.Models.Responses;
 using System;
+using System.Xml.Linq;
+using static PaydirtPickem.Models.Responses.ScoresAPIResponse;
 
 namespace PaydirtPickem.Logic
 {
@@ -55,14 +57,77 @@ namespace PaydirtPickem.Logic
 
             var sport = "americanfootball_nfl";
             var apiKey = "824e794d3659abd375e82e9cd361678a";
-            
+
             var resp = await client.GetAsync(BASE_URL + $"/v4/sports/{sport}/scores/?apiKey={apiKey}&daysFrom={daysFrom}");
             var respString = await resp.Content.ReadAsStringAsync();
             var scores = JsonConvert.DeserializeObject<List<ScoresAPIResponse>>(respString);
+            //var scores = new List<ScoresAPIResponse>()
+            //{
+            //    new ScoresAPIResponse
+            //    {
+            //        CommenceTime = DateTime.UtcNow,
+            //        Completed = true,
+            //        HomeTeam = "Philadelphia Eagles",
+            //        AwayTeam = "Jacksonville Jaguars",
+            //        Scores = new List<Score>
+            //        {
+            //            new Score
+            //            {
+            //                Name = "Philadelphia Eagles",
+            //                TeamScore = "24"
+            //            },
+            //            new Score
+            //            {
+            //                Name = "Jacksonville Jaguars",
+            //                TeamScore = "17"
+            //            }
+            //        }
+            //    },
+            //    new ScoresAPIResponse
+            //    {
+            //        CommenceTime = DateTime.UtcNow,
+            //        Completed = true,
+            //        HomeTeam = "Las Vegas Raiders",
+            //        AwayTeam = "Denver Broncos",
+            //        Scores = new List<Score>
+            //        {
+            //            new Score
+            //            {
+            //                Name = "Las Vegas Raiders",
+            //                TeamScore = "24"
+            //            },
+            //            new Score
+            //            {
+            //                Name = "Jacksonville Jaguars",
+            //                TeamScore = "17"
+            //            }
+            //        }
+            //    },
+            //    new ScoresAPIResponse
+            //    {
+            //        CommenceTime = DateTime.UtcNow,
+            //        Completed = true,
+            //        HomeTeam = "Philadelphia Eagles",
+            //        AwayTeam = "Jacksonville Jaguars",
+            //        Scores = new List<Score>
+            //        {
+            //            new Score
+            //            {
+            //                Name = "Philadelphia Eagles",
+            //                TeamScore = "24"
+            //            },
+            //            new Score
+            //            {
+            //                Name = "Jacksonville Jaguars",
+            //                TeamScore = "17"
+            //            }
+            //        }
+            //    }
+            //};
 
-            foreach (var score in scores.Where(x => x.Completed))
+            foreach (var score in scores.Where(x => x.Completed.HasValue && x.Completed.Value && x.CommenceTime.HasValue))
             {
-                var gameWeek = GetWeekNumberForGame(score.CommenceTime);
+                var gameWeek = GetWeekNumberForGame(score.CommenceTime.Value);
 
                 var gameToScore = _context.Games.FirstOrDefault(x => x.WeekNumber == gameWeek && x.HomeTeam == score.HomeTeam && x.AwayTeam == score.AwayTeam && (!x.AwayTeamScore.HasValue || !x.HomeTeamScore.HasValue));
                 if (gameToScore != null)
@@ -70,6 +135,7 @@ namespace PaydirtPickem.Logic
                     gameToScore.AwayTeamScore = int.Parse(score.Scores.FirstOrDefault(x => x.Name == score.AwayTeam)?.TeamScore);
                     gameToScore.HomeTeamScore = int.Parse(score.Scores.FirstOrDefault(x => x.Name == score.HomeTeam)?.TeamScore);
                     _context.Games.Update(gameToScore);
+                    
 
                     var winningTeam = "";
                     //math to calculate home team score against away team score after factoring the spread
@@ -89,9 +155,51 @@ namespace PaydirtPickem.Logic
                     foreach (var user in userPicksToUpdate)
                     {
                         user.CorrectPick = user.PickedTeam == winningTeam;
-                        _context.UserPicks.Update(user);
+                        _context.UserPicks.Update(user).;
+                        
 
-                        //  TODO: update userWeekScore record here
+                        var userWeekScore = _context.UserWeekScores.FirstOrDefault(x => x.WeekNumber == gameWeek && x.UserId == user.UserId);
+                        var userSeasonScore = _context.UserSeasonScores.FirstOrDefault(x => x.UserId == user.UserId);
+                        if (userWeekScore == null)
+                        {
+                            userWeekScore = new UserWeekScore
+                            {
+                                WeekNumber = gameWeek.Value,
+                                UserId = user.UserId,
+                                WeekTotalWin = 0,
+                                WeekTotalLoss = 0
+                            };
+                            _context.UserWeekScores.Add(userWeekScore);
+                            
+                        }
+
+                        if (userSeasonScore == null)
+                        {
+                            userSeasonScore = new UserSeasonScore
+                            {
+                                UserId = user.UserId,
+                                SeasonTotalWin = 0,
+                                SeasonTotalLoss = 0
+                            };
+                            _context.UserSeasonScores.Add(userSeasonScore);
+                            
+                        }
+                        if (user.CorrectPick.Value)
+                        {
+                            userWeekScore.WeekTotalWin++;
+                            userSeasonScore.SeasonTotalWin++;
+                            _context.UserWeekScores.Update(userWeekScore);
+                            _context.UserSeasonScores.Update(userSeasonScore);
+                            
+                        }
+                        else
+                        {
+                            userWeekScore.WeekTotalLoss++;
+                            userSeasonScore.SeasonTotalLoss++;
+                            _context.UserWeekScores.Update(userWeekScore);
+                            _context.UserSeasonScores.Update(userSeasonScore);
+                           
+                        }
                     }
                 }
             }
