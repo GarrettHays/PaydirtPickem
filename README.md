@@ -34,3 +34,9 @@ This web application will provide users a platform to create a football pickem l
 - 9/30 - 4:40pm - done for today
 
 - 10/1 - 11:00am - gets user picks API working with database 
+- 10/1 - 3:00pm - finish misc database work
+
+- 10/3 - 1:00pm - 3:45pm - css updates
+- 10/3 - 4:00pm - 5:45pm - work on scoring functionality and database
+
+- 10/4 - 8:00am - 9:45 - presentation slide deck work
