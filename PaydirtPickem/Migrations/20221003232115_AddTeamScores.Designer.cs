@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PaydirtPickem.Data;
 
@@ -11,9 +12,10 @@ using PaydirtPickem.Data;
 namespace PaydirtPickem.Migrations
 {
     [DbContext(typeof(PaydirtPickemDbContext))]
-    partial class PaydirtPickemDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221003232115_AddTeamScores")]
+    partial class AddTeamScores
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -419,20 +421,6 @@ namespace PaydirtPickem.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Games");
-                });
-
-            modelBuilder.Entity("PaydirtPickem.Models.LastDateScored", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("LastScored")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("LastScored");
                 });
 
             modelBuilder.Entity("PaydirtPickem.Models.League", b =>
