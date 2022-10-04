@@ -9,5 +9,8 @@ namespace PaydirtPickem.Models
         public double? HomeTeamSpread { get; set; } 
         public DateTime? GameTime { get; set; }
         public bool IsActive { get; set; }  
+        public int? HomeTeamScore { get; set; }
+        public int? AwayTeamScore { get; set; }
+
     }
 }
