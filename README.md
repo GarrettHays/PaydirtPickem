@@ -40,3 +40,4 @@ This web application will provide users a platform to create a football pickem l
 - 10/3 - 4:00pm - 5:45pm - work on scoring functionality and database
 
 - 10/4 - 8:00am - 9:45 - presentation slide deck work
+- 10/4 - 10:00am - 12:00pm - work on scoring functionality
