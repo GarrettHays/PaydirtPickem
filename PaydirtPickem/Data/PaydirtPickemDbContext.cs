@@ -16,6 +16,8 @@ namespace PaydirtPickem.Data
         public DbSet<UserPick> UserPicks { get; set; }
         public DbSet<UserSeasonScore> UserSeasonScores { get; set; }
         public DbSet<UserWeekScore> UserWeekScores { get; set; }
+        public DbSet<League> League { get; set; }
+        public DbSet<LastDateScored> LastScored { get; set; }
 
     }
 }
