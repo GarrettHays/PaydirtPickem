@@ -36,9 +36,12 @@ namespace PaydirtPickem.Controllers
                     daysToGet = 3;
                 } 
             }
-            var gameLogic = new GameLogic();
-            await gameLogic.GetScores(daysToGet, _context);
-
+            
+                var gameLogic = new GameLogic();
+                await gameLogic.GetScores(daysToGet, _context);
+               
+            
+                
             return NoContent();
         }
     }

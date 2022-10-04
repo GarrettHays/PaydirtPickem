@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using PaydirtPickem.Data;
 using PaydirtPickem.Models;
 using PaydirtPickem.Models.Responses;
@@ -51,157 +52,104 @@ namespace PaydirtPickem.Logic
 
         public async Task GetScores(int daysFrom, PaydirtPickemDbContext _context)
         {
-            var BASE_URL = "https://api.the-odds-api.com";
-
-            using var client = new HttpClient();
-
-            var sport = "americanfootball_nfl";
-            var apiKey = "824e794d3659abd375e82e9cd361678a";
-
-            var resp = await client.GetAsync(BASE_URL + $"/v4/sports/{sport}/scores/?apiKey={apiKey}&daysFrom={daysFrom}");
-            var respString = await resp.Content.ReadAsStringAsync();
-            var scores = JsonConvert.DeserializeObject<List<ScoresAPIResponse>>(respString);
-            //var scores = new List<ScoresAPIResponse>()
-            //{
-            //    new ScoresAPIResponse
-            //    {
-            //        CommenceTime = DateTime.UtcNow,
-            //        Completed = true,
-            //        HomeTeam = "Philadelphia Eagles",
-            //        AwayTeam = "Jacksonville Jaguars",
-            //        Scores = new List<Score>
-            //        {
-            //            new Score
-            //            {
-            //                Name = "Philadelphia Eagles",
-            //                TeamScore = "24"
-            //            },
-            //            new Score
-            //            {
-            //                Name = "Jacksonville Jaguars",
-            //                TeamScore = "17"
-            //            }
-            //        }
-            //    },
-            //    new ScoresAPIResponse
-            //    {
-            //        CommenceTime = DateTime.UtcNow,
-            //        Completed = true,
-            //        HomeTeam = "Las Vegas Raiders",
-            //        AwayTeam = "Denver Broncos",
-            //        Scores = new List<Score>
-            //        {
-            //            new Score
-            //            {
-            //                Name = "Las Vegas Raiders",
-            //                TeamScore = "24"
-            //            },
-            //            new Score
-            //            {
-            //                Name = "Jacksonville Jaguars",
-            //                TeamScore = "17"
-            //            }
-            //        }
-            //    },
-            //    new ScoresAPIResponse
-            //    {
-            //        CommenceTime = DateTime.UtcNow,
-            //        Completed = true,
-            //        HomeTeam = "Philadelphia Eagles",
-            //        AwayTeam = "Jacksonville Jaguars",
-            //        Scores = new List<Score>
-            //        {
-            //            new Score
-            //            {
-            //                Name = "Philadelphia Eagles",
-            //                TeamScore = "24"
-            //            },
-            //            new Score
-            //            {
-            //                Name = "Jacksonville Jaguars",
-            //                TeamScore = "17"
-            //            }
-            //        }
-            //    }
-            //};
-
-            foreach (var score in scores.Where(x => x.Completed.HasValue && x.Completed.Value && x.CommenceTime.HasValue))
+            using (var dbContextTransaction = _context.Database.BeginTransaction())
             {
-                var gameWeek = GetWeekNumberForGame(score.CommenceTime.Value);
+                var BASE_URL = "https://api.the-odds-api.com";
 
-                var gameToScore = _context.Games.FirstOrDefault(x => x.WeekNumber == gameWeek && x.HomeTeam == score.HomeTeam && x.AwayTeam == score.AwayTeam && (!x.AwayTeamScore.HasValue || !x.HomeTeamScore.HasValue));
-                if (gameToScore != null)
+                using var client = new HttpClient();
+
+                var sport = "americanfootball_nfl";
+                var apiKey = "824e794d3659abd375e82e9cd361678a";
+
+                var resp = await client.GetAsync(BASE_URL + $"/v4/sports/{sport}/scores/?apiKey={apiKey}&daysFrom={daysFrom}");
+                var respString = await resp.Content.ReadAsStringAsync();
+                var scores = JsonConvert.DeserializeObject<List<ScoresAPIResponse>>(respString);
+                
+
+                foreach (var score in scores.Where(x => x.Completed.HasValue && x.Completed.Value && x.CommenceTime.HasValue))
                 {
-                    gameToScore.AwayTeamScore = int.Parse(score.Scores.FirstOrDefault(x => x.Name == score.AwayTeam)?.TeamScore);
-                    gameToScore.HomeTeamScore = int.Parse(score.Scores.FirstOrDefault(x => x.Name == score.HomeTeam)?.TeamScore);
-                    _context.Games.Update(gameToScore);
-                    
+                    var gameWeek = GetWeekNumberForGame(score.CommenceTime.Value);
 
-                    var winningTeam = "";
-                    //math to calculate home team score against away team score after factoring the spread
-                    if ((gameToScore.HomeTeamScore + gameToScore.HomeTeamSpread) > gameToScore.AwayTeamScore)
+                    var gameToScore = _context.Games.FirstOrDefault(x => x.WeekNumber == gameWeek && x.HomeTeam == score.HomeTeam && x.AwayTeam == score.AwayTeam && (!x.AwayTeamScore.HasValue || !x.HomeTeamScore.HasValue));
+                    if (gameToScore != null)
                     {
-                        //home team won
-                        winningTeam = gameToScore.HomeTeam;
-                    }
-                    else
-                    {
-                        //away team won
-                        winningTeam = gameToScore.AwayTeam;
-                    }
+                        gameToScore.AwayTeamScore = int.Parse(score.Scores.FirstOrDefault(x => x.Name == score.AwayTeam)?.TeamScore);
+                        gameToScore.HomeTeamScore = int.Parse(score.Scores.FirstOrDefault(x => x.Name == score.HomeTeam)?.TeamScore);
+                        _context.Entry(gameToScore).State = EntityState.Modified;
 
-                    var userPicksToUpdate = _context.UserPicks.Where(x => x.GameId == gameToScore.Id);
-                    //foreach users by winner and game id - then update winner
-                    foreach (var user in userPicksToUpdate)
-                    {
-                        user.CorrectPick = user.PickedTeam == winningTeam;
-                        _context.UserPicks.Update(user).;
-                        
 
-                        var userWeekScore = _context.UserWeekScores.FirstOrDefault(x => x.WeekNumber == gameWeek && x.UserId == user.UserId);
-                        var userSeasonScore = _context.UserSeasonScores.FirstOrDefault(x => x.UserId == user.UserId);
-                        if (userWeekScore == null)
+                        var winningTeam = "";
+                        //math to calculate home team score against away team score after factoring the spread
+                        if ((gameToScore.HomeTeamScore + gameToScore.HomeTeamSpread) > gameToScore.AwayTeamScore)
                         {
-                            userWeekScore = new UserWeekScore
-                            {
-                                WeekNumber = gameWeek.Value,
-                                UserId = user.UserId,
-                                WeekTotalWin = 0,
-                                WeekTotalLoss = 0
-                            };
-                            _context.UserWeekScores.Add(userWeekScore);
-                            
-                        }
-
-                        if (userSeasonScore == null)
-                        {
-                            userSeasonScore = new UserSeasonScore
-                            {
-                                UserId = user.UserId,
-                                SeasonTotalWin = 0,
-                                SeasonTotalLoss = 0
-                            };
-                            _context.UserSeasonScores.Add(userSeasonScore);
-                            
-                        }
-                        if (user.CorrectPick.Value)
-                        {
-                            userWeekScore.WeekTotalWin++;
-                            userSeasonScore.SeasonTotalWin++;
-                            _context.UserWeekScores.Update(userWeekScore);
-                            _context.UserSeasonScores.Update(userSeasonScore);
-                            
+                            //home team won
+                            winningTeam = gameToScore.HomeTeam;
                         }
                         else
                         {
-                            userWeekScore.WeekTotalLoss++;
-                            userSeasonScore.SeasonTotalLoss++;
-                            _context.UserWeekScores.Update(userWeekScore);
-                            _context.UserSeasonScores.Update(userSeasonScore);
-                           
+                            //away team won
+                            winningTeam = gameToScore.AwayTeam;
+                        }
+
+                        var userPicksToUpdate = _context.UserPicks.Where(x => x.GameId == gameToScore.Id);
+                        //foreach users by winner and game id - then update winner
+                        foreach (var user in userPicksToUpdate)
+                        {
+                            user.CorrectPick = user.PickedTeam == winningTeam;
+                            _context.Entry(user).State = EntityState.Modified;
+
+
+                            var userWeekScore = _context.UserWeekScores.FirstOrDefault(x => x.WeekNumber == gameWeek && x.UserId == user.UserId);
+                            var userSeasonScore = _context.UserSeasonScores.FirstOrDefault(x => x.UserId == user.UserId);
+                            if (userWeekScore == null)
+                            {
+                                userWeekScore = new UserWeekScore
+                                {
+
+                                    WeekNumber = gameWeek.Value,
+                                    UserId = user.UserId,
+                                    WeekTotalWin = 0,
+                                    WeekTotalLoss = 0
+                                };
+                                _context.UserWeekScores.Add(userWeekScore);
+                                await _context.SaveChangesAsync();
+
+                            }
+
+                            if (userSeasonScore == null)
+                            {
+                                userSeasonScore = new UserSeasonScore
+                                {
+
+                                    UserId = user.UserId,
+                                    SeasonTotalWin = 0,
+                                    SeasonTotalLoss = 0
+                                };
+                                _context.UserSeasonScores.Add(userSeasonScore);
+                                await _context.SaveChangesAsync();
+
+                            }
+                            if (user.CorrectPick.Value)
+                            {
+                                userWeekScore.WeekTotalWin++;
+                                userSeasonScore.SeasonTotalWin++;
+                                _context.Entry(userWeekScore).State = EntityState.Modified;
+                                _context.Entry(userSeasonScore).State = EntityState.Modified;
+
+                            }
+                            else
+                            {
+                                userWeekScore.WeekTotalLoss++;
+                                userSeasonScore.SeasonTotalLoss++;
+                                _context.Entry(userWeekScore).State = EntityState.Modified;
+                                _context.Entry(userSeasonScore).State = EntityState.Modified;
+
+                            }
                         }
                     }
                 }
+                await _context.SaveChangesAsync();
+                dbContextTransaction.Commit();
             }
         }
 
@@ -211,7 +159,7 @@ namespace PaydirtPickem.Logic
             foreach (var game in inactiveGames)
             {
                 game.IsActive = false;
-                _context.Games.Update(game);
+                _context.Entry(game).State = EntityState.Modified;
             }
         }
 
