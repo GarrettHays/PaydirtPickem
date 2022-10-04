@@ -107,9 +107,10 @@ namespace PaydirtPickem.Controllers
                         IsActive = isActive
                     };
                     _context.Games.Add(newGame);
-                    await _context.SaveChangesAsync();
+                    
                 }
             }
+            await _context.SaveChangesAsync();
             return NoContent();
         }
 

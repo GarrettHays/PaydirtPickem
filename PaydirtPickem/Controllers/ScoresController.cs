@@ -26,25 +26,20 @@ namespace PaydirtPickem.Controllers
         public async Task<IActionResult> PostScore(Guid id)
         {
             var lastDateScored = await _context.LastScored.FirstOrDefaultAsync();
+            var daysToGet = 3;
             if (lastDateScored != null)
             {
-                var daysToGet = (DateTime.UtcNow - lastDateScored.LastScored).TotalDays;
+                daysToGet = Convert.ToInt32((DateTime.UtcNow - lastDateScored.LastScored).TotalDays);
+                //API only accepts values for 'daysFrom' event to be 1, 2 or 3.
+                if (daysToGet > 3)
+                {
+                    daysToGet = 3;
+                } 
             }
-            var game = await _context.Games.FindAsync(id);
-            if (game == null)
-            {
-                return NotFound();
-            }
-
-            _context.Games.Remove(game);
-            await _context.SaveChangesAsync();
+            var gameLogic = new GameLogic();
+            await gameLogic.GetScores(daysToGet, _context);
 
             return NoContent();
-        }
-
-        private bool GameExists(Guid id)
-        {
-            return _context.Games.Any(e => e.Id == id);
         }
     }
 }
