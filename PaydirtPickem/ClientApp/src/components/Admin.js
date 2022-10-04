@@ -20,10 +20,28 @@ export class Admin extends Component {
             .then(response => console.log('Success:', response));
     }
 
+    handleScore = async event => {
+        event.preventDefault();
+        const token = await authService.getAccessToken();
+
+        fetch('/api/scores', {
+            method: 'POST',
+
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }
+
+        })
+
+            .catch(error => console.error('Error:', error))
+
+            .then(response => console.log('Success:', response));
+    }
+
     render() {
         return (
             <div>
                 <button onClick={this.handleClick}> Get Week's Game Spreads </button>
+          
+                <button onClick={this.handleScore}> Score Completed Games </button>
             </div>
         );
     }
