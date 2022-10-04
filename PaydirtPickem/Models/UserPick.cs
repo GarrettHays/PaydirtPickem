@@ -7,5 +7,6 @@ namespace PaydirtPickem.Models
         public string PickedTeam { get; set; }
         public Guid GameId { get; set; }
         public virtual Game Game { get; set; }
+        public bool? CorrectPick { get; set; }
     }
 }
