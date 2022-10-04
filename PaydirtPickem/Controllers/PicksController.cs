@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
 using PaydirtPickem.Data;
@@ -24,11 +25,16 @@ namespace PaydirtPickem.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous]
-        public async Task<List<Game>> Get()
+        public async Task<List<UserPick>> Get()
         {
-            var games = _db.Games.Where(x => x.IsActive).ToList();
-            return games;
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var currentUser = await _userManager.FindByIdAsync(userId);
+
+            var gamesLogic = new GameLogic();
+            var currentWeek = gamesLogic.GetWeekNumberForGame(DateTime.UtcNow);
+
+            var picks = _db.UserPicks.Where(x => x.UserId == Guid.Parse(currentUser.Id) && x.Game.WeekNumber == currentWeek)?.Include(x => x.Game).ToList();
+            return picks;
         }
 
         [HttpPost]

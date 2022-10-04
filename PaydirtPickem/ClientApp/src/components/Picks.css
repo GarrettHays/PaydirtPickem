@@ -18,3 +18,13 @@
     margin-bottom: 60px;
     display: block;
 }
+
+.correctPick {
+    color: limegreen !important;
+    font-weight: bold;
+}
+
+.wrongPick {
+    color: #ed0404 !important;
+    font-weight: bold;
+}
