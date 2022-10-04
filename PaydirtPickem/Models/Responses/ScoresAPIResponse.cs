@@ -14,10 +14,10 @@ namespace PaydirtPickem.Models.Responses
         public string SportTitle { get; set; }
 
         [JsonProperty("commence_time")]
-        public DateTime CommenceTime { get; set; }
+        public DateTime? CommenceTime { get; set; }
 
         [JsonProperty("completed")]
-        public bool Completed { get; set; }
+        public bool? Completed { get; set; }
 
         [JsonProperty("home_team")]
         public string HomeTeam { get; set; }
@@ -29,7 +29,7 @@ namespace PaydirtPickem.Models.Responses
         public List<Score> Scores { get; set; }
 
         [JsonProperty("last_update")]
-        public DateTime LastUpdate { get; set; }
+        public DateTime? LastUpdate { get; set; }
         
 
         public class Score
