@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using PaydirtPickem.Data;
 using PaydirtPickem.Models;
+using PaydirtPickem.Models.Responses;
 using System;
 
 namespace PaydirtPickem.Logic
@@ -44,6 +45,56 @@ namespace PaydirtPickem.Logic
             }
 
             return gameList;
+        }
+
+        public async Task GetScores(int daysFrom, PaydirtPickemDbContext _context)
+        {
+            var BASE_URL = "https://api.the-odds-api.com";
+
+            using var client = new HttpClient();
+
+            var sport = "americanfootball_nfl";
+            var apiKey = "824e794d3659abd375e82e9cd361678a";
+            
+            var resp = await client.GetAsync(BASE_URL + $"/v4/sports/{sport}/scores/?apiKey={apiKey}&daysFrom={daysFrom}");
+            var respString = await resp.Content.ReadAsStringAsync();
+            var scores = JsonConvert.DeserializeObject<List<ScoresAPIResponse>>(respString);
+
+            foreach (var score in scores.Where(x => x.Completed))
+            {
+                var gameWeek = GetWeekNumberForGame(score.CommenceTime);
+
+                var gameToScore = _context.Games.FirstOrDefault(x => x.WeekNumber == gameWeek && x.HomeTeam == score.HomeTeam && x.AwayTeam == score.AwayTeam && (!x.AwayTeamScore.HasValue || !x.HomeTeamScore.HasValue));
+                if (gameToScore != null)
+                {
+                    gameToScore.AwayTeamScore = int.Parse(score.Scores.FirstOrDefault(x => x.Name == score.AwayTeam)?.TeamScore);
+                    gameToScore.HomeTeamScore = int.Parse(score.Scores.FirstOrDefault(x => x.Name == score.HomeTeam)?.TeamScore);
+                    _context.Games.Update(gameToScore);
+
+                    var winningTeam = "";
+                    //math to calculate home team score against away team score after factoring the spread
+                    if ((gameToScore.HomeTeamScore + gameToScore.HomeTeamSpread) > gameToScore.AwayTeamScore)
+                    {
+                        //home team won
+                        winningTeam = gameToScore.HomeTeam;
+                    }
+                    else
+                    {
+                        //away team won
+                        winningTeam = gameToScore.AwayTeam;
+                    }
+
+                    var userPicksToUpdate = _context.UserPicks.Where(x => x.GameId == gameToScore.Id);
+                    //foreach users by winner and game id - then update winner
+                    foreach (var user in userPicksToUpdate)
+                    {
+                        user.CorrectPick = user.PickedTeam == winningTeam;
+                        _context.UserPicks.Update(user);
+
+                        //  TODO: update userWeekScore record here
+                    }
+                }
+            }
         }
 
         public void CheckForInactiveGames(PaydirtPickemDbContext _context, int currentWeek)
