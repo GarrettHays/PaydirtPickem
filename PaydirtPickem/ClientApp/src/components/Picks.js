@@ -109,7 +109,7 @@ export class Picks extends Component {
                     <td>{pick.game.homeTeamSpread}</td>
                     <td>{pick.game.awayTeam}</td>
                     <td>{(new Date(pick.game.gameTime)).toLocaleString('en-US')}</td>
-                    <td className={pick.correctPick ? "correctPick" : "wrongPick"}>{pick.pickedTeam}</td>
+                    <td className={pick.correctPick === null ? "notScored" : (pick.correctPick ? "correctPick" : "wrongPick")}>{pick.pickedTeam}</td>
                   </tr>
                 )} 
               </tbody>

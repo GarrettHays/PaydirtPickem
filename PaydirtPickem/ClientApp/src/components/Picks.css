@@ -28,3 +28,8 @@
     color: #ed0404 !important;
     font-weight: bold;
 }
+
+.notScored {
+    color: black !important;
+    font-weight: bold;
+}
