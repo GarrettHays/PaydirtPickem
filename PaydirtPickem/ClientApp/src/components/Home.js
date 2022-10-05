@@ -7,7 +7,7 @@ export class Home extends Component {
   render() {
     return (
        <div className='homeDIV'>
-            <img className='homeIMG' src="https://raw.githubusercontent.com/GarrettHays/images/main/PaydirtWelcome.png" alt="logo"></img>
+            <img className='homeIMG' src="https://raw.githubusercontent.com/GarrettHays/images/main/PaydirtLOGONew.png" alt="logo"></img>
             <p>To get started, head over to <strong>register</strong> or <strong>login</strong> page.</p>
             <p>Then, navigate to <strong>picks</strong> to make your selections!</p>
             <p>If you've got questions, the <strong>rules</strong> has answers.</p>

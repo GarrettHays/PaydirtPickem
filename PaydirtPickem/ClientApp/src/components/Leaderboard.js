@@ -20,7 +20,7 @@ export class Leaderboard extends Component {
         let scoreInfo = this.state.scoreInfo;
         return (
             <div>
-                <img id="tabelLabel" className="picksIMG" src="https://raw.githubusercontent.com/GarrettHays/images/main/LEADERBOARD.png" alt="logo"></img>
+                <img id="tabelLabel" className="leaderIMG" src="https://raw.githubusercontent.com/GarrettHays/images/main/LEADERBOARD.png" alt="logo"></img>
                 <br />
                 <table className='table table-striped' aria-labelledby="tabelLabel">
                     <thead>

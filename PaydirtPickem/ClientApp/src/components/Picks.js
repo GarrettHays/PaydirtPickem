@@ -61,15 +61,14 @@ export class Picks extends Component {
           if (pickInfo.length === 0) {
               form =
                   <div>
-                      <img id="tabelLabel" className="picksIMG" src="https://raw.githubusercontent.com/GarrettHays/images/main/Picks.png" alt="logo"></img>
-                      <p>NO GAMEZ FOUND</p>
+                      <img id="tabelLabel" className="gamesIMG" src="https://raw.githubusercontent.com/GarrettHays/images/main/games.png" alt="logo"></img>
                       <p>Contact Admin to Populate Games</p>
                   </div>
           }
           else {
               form =
                   <div>
-                      <img id="tabelLabel" className="picksIMG" src="https://raw.githubusercontent.com/GarrettHays/images/main/Picks.png" alt="logo"></img>
+                      <img id="tabelLabel" className="makepicksIMG" src="https://raw.githubusercontent.com/GarrettHays/images/main/Picks.png" alt="logo"></img>
                       <p>Select your picks from the games below:</p>
                       <form>
                           <table className='table table-striped' aria-labelledby="tabelLabel">
@@ -103,7 +102,7 @@ export class Picks extends Component {
       }
       else {
         form =
-        <div>
+        <div className="yourPicksView">
                 <img id="tabelLabel" className="picksIMG" src="https://raw.githubusercontent.com/GarrettHays/images/main/PickedPicks.png" alt="logo"></img>
                 <p><em>Once games are scored, correct picks are green & incorrect picks are red.</em></p>
                 <br/>

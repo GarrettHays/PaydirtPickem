@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import authService from './api-authorization/AuthorizeService';
+import './Admin.css';
 
 export class Admin extends Component {
     static displayName = Admin.name;
@@ -18,6 +19,8 @@ export class Admin extends Component {
             .catch(error => console.error('Error:', error))
 
             .then(response => console.log('Success:', response));
+
+        alert("Games Have Been Populated.")
     }
 
     handleScore = async event => {
@@ -34,14 +37,17 @@ export class Admin extends Component {
             .catch(error => console.error('Error:', error))
 
             .then(response => console.log('Success:', response));
+
+        alert("Games Have Been Scored.")
     }
 
     render() {
         return (
-            <div>
-                <button onClick={this.handleClick}> Get Week's Game Spreads </button>
+            <div className="adminDIV">
+                <img className="adminIMG" src="https://raw.githubusercontent.com/GarrettHays/images/main/ADMIN.png" alt="logo"></img>
+                <button className="adminButton" onClick={this.handleClick}> Get Games </button>
           
-                <button onClick={this.handleScore}> Score Completed Games </button>
+                <button className="adminButton" onClick={this.handleScore}> Score Games </button>
             </div>
         );
     }

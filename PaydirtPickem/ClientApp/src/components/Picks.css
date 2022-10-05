@@ -19,6 +19,36 @@
     display: block;
 }
 
+.gamesIMG {
+    margin-top: 40px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 25px;
+    display: block;
+    width: 35%;
+    height: auto;
+}
+
+.leaderIMG {
+    margin-top: 40px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 25px;
+    display: block;
+    width: 50%;
+    height: auto;
+}
+
+.makepicksIMG {
+    margin-top: 40px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 25px;
+    display: block;
+    width: 55%;
+    height: auto;
+}
+
 .correctPick {
     color: limegreen !important;
     font-weight: bold;

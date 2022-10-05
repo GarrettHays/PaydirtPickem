@@ -1,31 +1,32 @@
 ﻿
-.homeDIV {
+.adminDIV {
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 20px;
     display: block;
-    border:solid;
-    border-radius: 20px;
-    border-width: 4px;
-    border-color: #c4c4c464;
 }
 
-.yourPicksView {
-    margin-bottom: 100px;
-}
-
-p {
+.adminButton {
+    
     text-align: center;
     margin-bottom: 5px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 30px;
+    padding: 20px;
+    display:flex;
+    border:solid;
+    border-radius:10px;
+
 }
 
-.homeIMG {
-    margin-top: 20px;
+.adminIMG {
+    margin-top: 40px;
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 10px;
     display: block;
-    width: 35%;
+    width: 23%;
     height: auto;
 
 }
