@@ -20,18 +20,24 @@ export class Picks extends Component {
 
   handleChange = (e) => {
     $('input[name="' + $(this).attr('name') + '"]').not($(this)).trigger('deselect');
-    const { form } = this.state;
+      const { form } = this.state;
+      
     this.setState({
       form: {
           ...form,
           [e.target.name]: e.target.value
       }
     });
-    console.log('this is changed', this);
+    //const gameCount = this.state.pickInfo.length;
+    //const selectedCount = Object.keys(this.state.form).length+1;
+
+    //if (gameCount === selectedCount) {
+    //    document.getElementById("picksButton").disabled = false;
+    //}
   }
 
   handleClick = async event => {
-    event.preventDefault();
+    /*event.preventDefault();*/
     const token = await authService.getAccessToken();
      const data = this.state.form;
         fetch('/api/picks', {
@@ -52,45 +58,54 @@ export class Picks extends Component {
       let pickInfo = this.state.pickInfo;
       let form;
       if (userPicks === null || userPicks.length === 0) {
-        form =
-        <div>
-          <img id="tabelLabel" className="picksIMG" src="https://raw.githubusercontent.com/GarrettHays/images/main/Picks.png" alt="logo"></img>
-          <p>Select your picks from the games below:</p>
-          <form>
-            <table className='table table-striped' aria-labelledby="tabelLabel">
-              <thead>
-                <tr>
-                  <th></th>
-                  <th>Home Team</th>
-                  <th>Home Team Spread</th>
-                  <th></th>
-                  <th>Away Team</th>
-                  <th>Game Time (User Local Time)</th>
-                </tr>
-              </thead>
-              <tbody>
-                {pickInfo.map(pick =>
-                    <tr key={pick.homeTeam}>
-                        <td><input type='radio' id={pick.homeTeam} name={pick.id} value={pick.homeTeam} onChange={this.handleChange} /></td>
-                    <td>{pick.homeTeam}</td>
-                    <td>{pick.homeTeamSpread}</td>
-                        <td><input type='radio' id={pick.awayTeam} name={pick.id} value={pick.awayTeam} onChange={this.handleChange} /></td>
-                    <td>{pick.awayTeam}</td>
-                    <td>{(new Date(pick.gameTime)).toLocaleString('en-US')}</td>
-                  </tr>
-                )} 
-              </tbody>
-              </table>
-              <button className='picksButton'onClick={this.handleClick}> Submit Picks </button>
-          </form> 
-        </div>;
+          if (pickInfo.length === 0) {
+              form =
+                  <div>
+                      <img id="tabelLabel" className="picksIMG" src="https://raw.githubusercontent.com/GarrettHays/images/main/Picks.png" alt="logo"></img>
+                      <p>NO GAMEZ FOUND</p>
+                      <p>Contact Admin to Populate Games</p>
+                  </div>
+          }
+          else {
+              form =
+                  <div>
+                      <img id="tabelLabel" className="picksIMG" src="https://raw.githubusercontent.com/GarrettHays/images/main/Picks.png" alt="logo"></img>
+                      <p>Select your picks from the games below:</p>
+                      <form>
+                          <table className='table table-striped' aria-labelledby="tabelLabel">
+                              <thead>
+                                  <tr>
+                                      <th></th>
+                                      <th>Home Team</th>
+                                      <th>Home Team Spread</th>
+                                      <th></th>
+                                      <th>Away Team</th>
+                                      <th>Game Time (User Local Time)</th>
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                  {pickInfo.map(pick =>
+                                      <tr key={pick.homeTeam}>
+                                          <td><input type='radio' id={pick.homeTeam} name={pick.id} value={pick.homeTeam} onChange={this.handleChange} /></td>
+                                          <td>{pick.homeTeam}</td>
+                                          <td>{pick.homeTeamSpread}</td>
+                                          <td><input type='radio' id={pick.awayTeam} name={pick.id} value={pick.awayTeam} onChange={this.handleChange} /></td>
+                                          <td>{pick.awayTeam}</td>
+                                          <td>{(new Date(pick.gameTime)).toLocaleString('en-US')}</td>
+                                      </tr>
+                                  )}
+                              </tbody>
+                          </table>
+                          <button id="picksButton" className='picksButton' onClick={this.handleClick}> Submit Picks </button>
+                      </form>
+                  </div>;
+          } 
       }
       else {
         form =
         <div>
-          <img id="tabelLabel" className="picksIMG" src="https://raw.githubusercontent.com/GarrettHays/images/main/Picks.png" alt="logo"></img>
-            <p>You've Selected Your Picks For This Week</p>
-                <p>Correct Picks Show In Green, Incorrect Picks In Red</p>
+                <img id="tabelLabel" className="picksIMG" src="https://raw.githubusercontent.com/GarrettHays/images/main/PickedPicks.png" alt="logo"></img>
+                <p><em>Once games are scored, correct picks are green & incorrect picks are red.</em></p>
                 <br/>
             <table className='table table-striped' aria-labelledby="tabelLabel">
               <thead>
