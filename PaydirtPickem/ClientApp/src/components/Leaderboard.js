@@ -1,63 +1,62 @@
 import React, { Component } from 'react';
-import authService from './api-authorization/AuthorizeService'
+/*import './Leaderboard.css';*/
+import authService from './api-authorization/AuthorizeService';
+import $ from "jquery";
 
-export class FetchData extends Component {
-  static displayName = FetchData.name;
+export class Leaderboard extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            scoreInfo: []
+        };
+    }
 
-  constructor(props) {
-    super(props);
-    this.state = { forecasts: [], loading: true };
-  }
+    componentDidMount() {
+        this.getScoresFromAPI();
+    }
 
-  componentDidMount() {
-    this.populateWeatherData();
-  }
 
-  static renderForecastsTable(forecasts) {
-    return (
-      <table className='table table-striped' aria-labelledby="tabelLabel">
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Temp. (C)</th>
-            <th>Temp. (F)</th>
-            <th>Summary</th>
-          </tr>
-        </thead>
-        <tbody>
-          {forecasts.map(forecast =>
-            <tr key={forecast.date}>
-              <td>{forecast.date}</td>
-              <td>{forecast.temperatureC}</td>
-              <td>{forecast.temperatureF}</td>
-              <td>{forecast.summary}</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
-    );
-  }
+    render() {
+        let scoreInfo = this.state.scoreInfo;
+        return (
+            <div>
+                <img id="tabelLabel" className="picksIMG" src="https://raw.githubusercontent.com/GarrettHays/images/main/Picks.png" alt="logo"></img>
+                <p>Season Standings</p>
+                <br />
+                <table className='table table-striped' aria-labelledby="tabelLabel">
+                    <thead>
+                        <tr>
+                            <th>Team Name</th>
+                            <th>Season Wins</th>
+                            <th>Season Losses</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {scoreInfo.map(score =>
+                            <tr key={score.userId}>
+                                <td>{score.teamName}</td>
+                                <td>{score.seasonTotalWin }</td>
+                                <td>{score.seasonTotalLoss}</td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
+            </div>
+        );
+    }
 
-  render() {
-    let contents = this.state.loading
-      ? <p><em>Loading...</em></p>
-      : FetchData.renderForecastsTable(this.state.forecasts);
+    async getScoresFromAPI() {
+        const token = await authService.getAccessToken();
+        fetch('/api/scores', {
+            method: 'GET',
 
-    return (
-      <div>
-        <h1 id="tabelLabel" >Weather forecast</h1>
-        <p>This component demonstrates fetching data from the server.</p>
-        {contents}
-      </div>
-    );
-  }
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }
 
-  async populateWeatherData() {
-    const token = await authService.getAccessToken();
-    const response = await fetch('weatherforecast', {
-      headers: !token ? {} : { 'Authorization': `Bearer ${token}` }
-    });
-    const data = await response.json();
-    this.setState({ forecasts: data, loading: false });
-  }
+        })
+            .then(response => response.json())
+            .then(jsonStr => {
+                this.setState({ scoreInfo: jsonStr });
+            })
+            .catch(error => console.error('Unable to get games.', error));
+    }
 }

@@ -20,10 +20,10 @@ const AppRoutes = [
     path: '/team',
     element: <Team />
   },
-  //{
-  //  path: '/leaderboard',
-  //  element: <Leaderboard />
-  //},
+  {
+    path: '/leaderboard',
+    element: <Leaderboard />
+  },
   {
     path: '/picks',
     requireAuth: true,
