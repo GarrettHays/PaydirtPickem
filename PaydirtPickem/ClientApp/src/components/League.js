@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { Button, Form, FormGroup, Input, Label } from 'reactstrap';
+import authService from './api-authorization/AuthorizeService';
 import './League.css';
 
 export class League extends Component {
@@ -7,31 +9,21 @@ export class League extends Component {
         super();
 
         this.state = {
-            name: '',
-            league: '',
+            leagueName: ''
 
         };
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    handleChange = (e) => {
-        this.setState({
-            [e.target.name]: e.target.value
-        })
-    }
 
-    handleSubmit(event) {
+    async handleSubmit(event) {
         event.preventDefault();
-
-
-        const data = { name: this.state.name, league: this.state.league }
-
-        fetch('/api/createAccount', {
+        const token = await authService.getAccessToken();
+        const data = event.target.league.value;
+        fetch(`/api/leagues?leagueName=${data}`, {
             method: 'POST',
 
-            body: JSON.stringify(data), // data can be `string` or {object}!
-
-            headers: { 'Content-Type': 'application/json' }
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }
         })
 
             .then(res => res.json())
@@ -45,18 +37,26 @@ export class League extends Component {
 
     render() {
         return (
-          <div>  
-            <img className="leagueIMG" src="https://raw.githubusercontent.com/GarrettHays/images/main/LEAGUE.png" alt="logo"></img>
-            <form onSubmit={this.handleSubmit}>
-                <label htmlFor="name">Enter Name: </label>
-                <input id="name" name="name" type="text" onChange={this.handleChange} />
-                <br/>
-                <label htmlFor="league">Enter League Name: </label>
-                <input id="league" name="league" type="league" onChange={this.handleChange} />
-                <br/>
-                <button>Create League!</button>
-            </form>
-          </div>
+        <div>
+            <img className="teamIMG" src="https://raw.githubusercontent.com/GarrettHays/images/main/LEAGUE.png" alt="logo"></img>
+            <Form onSubmit={this.handleSubmit}>
+              <FormGroup floating>
+                <Input
+                  id="leagueName"
+                  name="league"
+                  placeholder="Enter League Name"
+                  type="text"
+                />
+                <Label for="teamName">
+                Enter League Name
+                </Label>
+              </FormGroup>
+              {' '}
+              <Button>
+                Create League
+              </Button>
+          </Form>
+        </div>
         );
     }
 }
