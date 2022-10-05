@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Packaging;
 using PaydirtPickem.Data;
 using PaydirtPickem.Logic;
 using PaydirtPickem.Models;
+using PaydirtPickem.Models.DTOs;
 
 namespace PaydirtPickem.Controllers
 {
@@ -16,10 +20,12 @@ namespace PaydirtPickem.Controllers
     public class ScoresController : ControllerBase
     {
         private readonly PaydirtPickemDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public ScoresController(PaydirtPickemDbContext context)
+        public ScoresController(UserManager<ApplicationUser> userManager, PaydirtPickemDbContext context)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         [HttpPost]
@@ -43,6 +49,28 @@ namespace PaydirtPickem.Controllers
             
                 
             return NoContent();
+        }
+
+        [HttpGet]
+        public async Task<List<SeasonScoreDTO>> Get()
+        {
+            var scores = _context.UserSeasonScores.ToList();
+            var seasonScores = new List<SeasonScoreDTO>();
+
+            foreach (var score in scores)
+            {
+                var currentUser = await _userManager.FindByIdAsync(score.UserId.ToString());
+                var scoreDTO = new SeasonScoreDTO
+                {
+                    SeasonTotalWin = score.SeasonTotalWin,
+                    SeasonTotalLoss = score.SeasonTotalLoss,
+                    UserId = score.UserId,
+                    TeamName = currentUser.TeamName
+                };
+                seasonScores.Add(scoreDTO);
+            }
+
+            return seasonScores.OrderBy(x => x.SeasonTotalWin).ToList();
         }
     }
 }
