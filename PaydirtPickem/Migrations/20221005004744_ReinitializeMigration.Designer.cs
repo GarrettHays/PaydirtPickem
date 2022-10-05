@@ -12,8 +12,8 @@ using PaydirtPickem.Data;
 namespace PaydirtPickem.Migrations
 {
     [DbContext(typeof(PaydirtPickemDbContext))]
-    [Migration("20221003232115_AddTeamScores")]
-    partial class AddTeamScores
+    [Migration("20221005004744_ReinitializeMigration")]
+    partial class ReinitializeMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -421,6 +421,20 @@ namespace PaydirtPickem.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Games");
+                });
+
+            modelBuilder.Entity("PaydirtPickem.Models.LastDateScored", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("LastScored")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LastScored");
                 });
 
             modelBuilder.Entity("PaydirtPickem.Models.League", b =>

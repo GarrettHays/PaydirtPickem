@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace PaydirtPickem.Migrations
 {
-    public partial class InitialMigration : Migration
+    public partial class ReinitializeMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -28,6 +28,7 @@ namespace PaydirtPickem.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    TeamName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -72,11 +73,14 @@ namespace PaydirtPickem.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    WeekNumber = table.Column<int>(type: "int", nullable: false),
-                    HomeTeam = table.Column<int>(type: "int", nullable: false),
-                    AwayTeam = table.Column<int>(type: "int", nullable: false),
+                    WeekNumber = table.Column<int>(type: "int", nullable: true),
+                    HomeTeam = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AwayTeam = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     HomeTeamSpread = table.Column<double>(type: "float", nullable: true),
-                    GameTime = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    GameTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    HomeTeamScore = table.Column<int>(type: "int", nullable: true),
+                    AwayTeamScore = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -99,6 +103,30 @@ namespace PaydirtPickem.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Keys", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "LastScored",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    LastScored = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LastScored", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "League",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    LeagueName = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_League", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -263,7 +291,8 @@ namespace PaydirtPickem.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PickedTeam = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    GameId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    GameId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CorrectPick = table.Column<bool>(type: "bit", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -275,6 +304,35 @@ namespace PaydirtPickem.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "ApplicationUserLeague",
+                columns: table => new
+                {
+                    LeaguesId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UsersId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ApplicationUserLeague", x => new { x.LeaguesId, x.UsersId });
+                    table.ForeignKey(
+                        name: "FK_ApplicationUserLeague_AspNetUsers_UsersId",
+                        column: x => x.UsersId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ApplicationUserLeague_League_LeaguesId",
+                        column: x => x.LeaguesId,
+                        principalTable: "League",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ApplicationUserLeague_UsersId",
+                table: "ApplicationUserLeague",
+                column: "UsersId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -360,6 +418,9 @@ namespace PaydirtPickem.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "ApplicationUserLeague");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
             migrationBuilder.DropTable(
@@ -381,6 +442,9 @@ namespace PaydirtPickem.Migrations
                 name: "Keys");
 
             migrationBuilder.DropTable(
+                name: "LastScored");
+
+            migrationBuilder.DropTable(
                 name: "PersistedGrants");
 
             migrationBuilder.DropTable(
@@ -391,6 +455,9 @@ namespace PaydirtPickem.Migrations
 
             migrationBuilder.DropTable(
                 name: "UserWeekScores");
+
+            migrationBuilder.DropTable(
+                name: "League");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
