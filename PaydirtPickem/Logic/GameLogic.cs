@@ -61,10 +61,12 @@ namespace PaydirtPickem.Logic
                 var sport = "americanfootball_nfl";
                 var apiKey = "824e794d3659abd375e82e9cd361678a";
 
-                var resp = await client.GetAsync(BASE_URL + $"/v4/sports/{sport}/scores/?apiKey={apiKey}&daysFrom={daysFrom}");
-                var respString = await resp.Content.ReadAsStringAsync();
-                var scores = JsonConvert.DeserializeObject<List<ScoresAPIResponse>>(respString);
-                
+                //var resp = await client.GetAsync(BASE_URL + $"/v4/sports/{sport}/scores/?apiKey={apiKey}&daysFrom={daysFrom}");
+                //var respString = await resp.Content.ReadAsStringAsync();
+                //var scores = JsonConvert.DeserializeObject<List<ScoresAPIResponse>>(respString);
+
+                var scores = CreateScoresList();
+
 
                 foreach (var score in scores.Where(x => x.Completed.HasValue && x.Completed.Value && x.CommenceTime.HasValue))
                 {
@@ -151,6 +153,65 @@ namespace PaydirtPickem.Logic
                 await _context.SaveChangesAsync();
                 dbContextTransaction.Commit();
             }
+        }
+
+        public List<ScoresAPIResponse> CreateScoresList()
+        {
+            var scoreDict = new Dictionary<string, string>()
+            {
+                { "Denver Broncos" , "Indianapolis Colts" },
+                { "Green Bay Packers" , "New York Giants" },
+                { "New Orleans Saints" , "Seattle Seahawks" },
+                { "New York Jets" , "Miami Dolphins" },
+                { "New England Patriots" , "Detroit Lions" },
+                { "Cleveland Browns" , "Los Angeles Chargers" },
+                { "Washington Commanders" , "Tennessee Titans" },
+                { "Tampa Bay Buccaneers" , "Atlanta Falcons" },
+                { "Buffalo Bills" , "Pittsburgh Steelers" },
+                { "Minnesota Vikings" , "Chicago Bears" },
+                { "Jacksonville Jaguars" , "Houston Texans" },
+                { "Carolina Panthers" , "San Francisco 49ers" },
+                { "Arizona Cardinals" , "Philadelphia Eagles" },
+                { "Los Angeles Rams" , "Dallas Cowboys" },
+                { "Baltimore Ravens" , "Cincinnati Bengals" },
+                { "Kansas City Chiefs" , "Las Vegas Raiders" }
+            };
+
+            var resp = new List<ScoresAPIResponse>();
+
+            foreach (var score in scoreDict)
+            {
+                resp.Add(CreateScoresResponse(score.Key, score.Value));
+            }
+
+            return resp;
+        }
+
+        public ScoresAPIResponse CreateScoresResponse(string homeTeam, string awayTeam)
+        {
+            var rnd = new Random();
+            var htScore = rnd.Next(7, 42);
+            var atScore = rnd.Next(7, 42);
+            return new ScoresAPIResponse
+            {
+                CommenceTime = DateTime.UtcNow,
+                Completed = true,
+                HomeTeam = homeTeam,
+                AwayTeam = awayTeam,
+                Scores = new List<Score>
+                {
+                    new Score
+                    {
+                        Name = homeTeam,
+                        TeamScore = htScore.ToString()
+                    },
+                    new Score
+                    {
+                        Name = awayTeam,
+                        TeamScore = atScore.ToString()
+                    }
+                }
+            };
         }
 
         public void CheckForInactiveGames(PaydirtPickemDbContext _context, int currentWeek)
