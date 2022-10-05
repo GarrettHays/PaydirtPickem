@@ -28,12 +28,13 @@ namespace PaydirtPickem.Controllers
         public async Task<List<UserPick>> Get()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var currentUser = await _userManager.FindByIdAsync(userId);
+            var currentUserId = Guid.Parse("e4b3237f-6b7a-42ea-a425-429e1ebd2b78");
+            //var currentUser = await _userManager.FindByIdAsync(userId);
 
             var gamesLogic = new GameLogic();
             var currentWeek = gamesLogic.GetWeekNumberForGame(DateTime.UtcNow);
 
-            var picks = _db.UserPicks.Where(x => x.UserId == Guid.Parse(currentUser.Id) && x.Game.WeekNumber == currentWeek)?.Include(x => x.Game).ToList();
+            var picks = _db.UserPicks.Where(x => x.UserId == currentUserId && x.Game.WeekNumber == currentWeek)?.Include(x => x.Game).ToList();
             return picks;
         }
 
@@ -49,7 +50,8 @@ namespace PaydirtPickem.Controllers
                 var userPick = new UserPick();
                 userPick.GameId = pick.Key;
                 userPick.PickedTeam = pick.Value;
-                userPick.UserId = Guid.Parse(currentUser.Id);
+                userPick.UserId = Guid.Parse("e4b3237f-6b7a-42ea-a425-429e1ebd2b78");
+                //userPick.UserId = Guid.Parse(currentUser.Id);
                 _db.UserPicks.Add(userPick);
                 _db.SaveChanges();
             }

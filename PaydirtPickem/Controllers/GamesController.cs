@@ -26,7 +26,7 @@ namespace PaydirtPickem.Controllers
         [HttpGet]
         public async Task<List<Game>> Get()
         {
-            var games = _context.Games.Where(x => x.IsActive).ToList();
+            var games = _context.Games.Where(x => x.IsActive).OrderBy(x => x.GameTime).ToList();
             return games;
         }
 
