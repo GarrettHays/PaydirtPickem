@@ -43,3 +43,5 @@ This web application will provide users a platform to create a football pickem l
 - 10/4 - 10:00am - 12:00pm - work on scoring functionality
 - 10/4 - 1:00pm - 4:00pm - complete scoring functionality and add component rendering on picks page
 - 10/4 - 4:00pm - 6:00pm - worked on getting League creation to work, pivoting to leaderboard tomorrow to complete MVP
+
+- 10/5 - 8:00am-10:30am - project presentation work
