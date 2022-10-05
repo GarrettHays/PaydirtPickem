@@ -70,7 +70,7 @@ namespace PaydirtPickem.Controllers
                 seasonScores.Add(scoreDTO);
             }
 
-            return seasonScores.OrderBy(x => x.SeasonTotalWin).ToList();
+            return seasonScores.OrderByDescending(x => x.SeasonTotalWin).ToList();
         }
     }
 }
