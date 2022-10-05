@@ -46,3 +46,4 @@ This web application will provide users a platform to create a football pickem l
 
 - 10/5 - 8:00am-10:30am - project presentation work
 - 10/5 - 10:30am - 2:00pm - complete MVP and presentation
+- 10/5 - 2:00pm - 4:15pm - final tweaks, css, etc.
